@@ -1,0 +1,8 @@
+apiVersion: cache.example.com/v1alpha1
+kind: Memcached
+metadata:
+  name: memcached-sample-2
+spec:
+  size: 3
+  maxsurge: 4
+  maxunavailable: 1
