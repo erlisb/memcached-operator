@@ -92,15 +92,25 @@ func (r *MemcachedReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		return ctrl.Result{}, err
 	}
 
-	// Ensure the deployment size is the same as the spec
+	// Ensure the deployment specs are the same as defined in the Memcached CR
 	size := memcached.Spec.Size
 	maxsurge := memcached.Spec.MaxSurge
 	maxunavailable := memcached.Spec.MaxUnavailable
+	image := memcached.Spec.Image
 
-	if *found.Spec.Replicas != size || *found.Spec.Strategy.RollingUpdate.MaxSurge != maxsurge || *found.Spec.Strategy.RollingUpdate.MaxUnavailable != maxunavailable {
+	if *found.Spec.Replicas != size || *found.Spec.Strategy.RollingUpdate.MaxSurge != maxsurge || *found.Spec.Strategy.RollingUpdate.MaxUnavailable != maxunavailable || found.Spec.Template.Spec.Containers[0].Image != image {
 		found.Spec.Replicas = &size
 		found.Spec.Strategy.RollingUpdate.MaxSurge = &maxsurge
 		found.Spec.Strategy.RollingUpdate.MaxUnavailable = &maxunavailable
+		found.Spec.Template.Spec.Containers = []corev1.Container{{
+			Image:   image,
+			Name:    "memcached",
+			Command: []string{"memcached", "-m=64", "-o", "modern", "-v"},
+			Ports: []corev1.ContainerPort{{
+				ContainerPort: 11211,
+				Name:          "memcached",
+			}},
+		}}
 
 		err = r.Update(ctx, found)
 		if err != nil {
@@ -145,6 +155,7 @@ func (r *MemcachedReconciler) deploymentForMemcached(m *cachev1alpha1.Memcached)
 	replicas := m.Spec.Size
 	maxsurge := m.Spec.MaxSurge
 	maxunavailable := m.Spec.MaxUnavailable
+	image := m.Spec.Image
 
 	dep := &appsv1.Deployment{
 		ObjectMeta: metav1.ObjectMeta{
@@ -168,7 +179,7 @@ func (r *MemcachedReconciler) deploymentForMemcached(m *cachev1alpha1.Memcached)
 				},
 				Spec: corev1.PodSpec{
 					Containers: []corev1.Container{{
-						Image:   "memcached:1.4.36-alpine",
+						Image:   image,
 						Name:    "memcached",
 						Command: []string{"memcached", "-m=64", "-o", "modern", "-v"},
 						Ports: []corev1.ContainerPort{{

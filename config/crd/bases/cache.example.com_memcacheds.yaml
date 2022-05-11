@@ -35,6 +35,11 @@ spec:
           spec:
             description: MemcachedSpec defines the desired state of Memcached
             properties:
+              image:
+                description: Image specifies Docker container image. This field is
+                  optional to allow higher level config management to default or override
+                  container images in workload controllers like Deployments and StatefulSets.
+                type: string
               maxsurge:
                 anyOf:
                 - type: integer
@@ -58,6 +63,7 @@ spec:
                 format: int32
                 type: integer
             required:
+            - image
             - maxsurge
             - maxunavailable
             type: object

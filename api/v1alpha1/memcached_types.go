@@ -32,6 +32,11 @@ type MemcachedSpec struct {
 	// The value can be an absolute number (for example, 5) or a percentage of desired Pods (for example, 10%).
 	// +operator-sdk:csv:customresourcedefinitions:type=spec
 	MaxUnavailable intstr.IntOrString `json:"maxunavailable"`
+
+	// Image specifies Docker container image. This field is optional to allow higher level config management to default or override
+	// container images in workload controllers like Deployments and StatefulSets.
+	// +operator-sdk:csv:customresourcedefinitions:type=spec
+	Image string `json:"image"`
 }
 
 // MemcachedStatus defines the observed state of Memcached
