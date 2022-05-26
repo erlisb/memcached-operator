@@ -3,7 +3,8 @@ kind: Memcached
 metadata:
   name: memcached-sample
 spec:
-  size: 3
+  size: 4
   maxsurge: 2
   maxunavailable: 1
-  image: "memcached:1.4.36-alpine"
+  image: "memcached:1.4.34-alpine"
+  progressDeadlineSeconds: 100

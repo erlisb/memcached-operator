@@ -37,6 +37,13 @@ type MemcachedSpec struct {
 	// container images in workload controllers like Deployments and StatefulSets.
 	// +operator-sdk:csv:customresourcedefinitions:type=spec
 	Image string `json:"image"`
+
+	// The maximum time in seconds for a deployment to make progress before it is considered to be failed.
+	// The deployment controller will continue to process failed deployments and a condition with a ProgressDeadlineExceeded reason
+	// will be surfaced in the deployment status. Note that progress will not be estimated during the time a deployment is paused.
+	// Defaults to 600s.
+	// +operator-sdk:csv:customresourcedefinitions:type=spec
+	ProgressDeadlineSeconds *int32 `json:"progressDeadlineSeconds,omitempty" protobuf:"varint,9,opt,name=progressDeadlineSeconds"`
 }
 
 // MemcachedStatus defines the observed state of Memcached
