@@ -73,8 +73,6 @@ spec:
                 type: integer
             required:
             - image
-            - maxsurge
-            - maxunavailable
             type: object
           status:
             description: MemcachedStatus defines the observed state of Memcached
