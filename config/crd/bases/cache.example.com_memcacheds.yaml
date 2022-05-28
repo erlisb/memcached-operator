@@ -15,7 +15,20 @@ spec:
     singular: memcached
   scope: Namespaced
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - jsonPath: .spec.size
+      name: Size
+      type: integer
+    - jsonPath: .spec.maxsurge
+      name: MaxSurge
+      type: integer
+    - jsonPath: .spec.maxunavailable
+      name: MaxUnavailable
+      type: integer
+    - jsonPath: .spec.image
+      name: Image
+      type: string
+    name: v1alpha1
     schema:
       openAPIV3Schema:
         description: Memcached is the Schema for the memcacheds API
