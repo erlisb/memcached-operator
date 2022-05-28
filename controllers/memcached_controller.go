@@ -97,11 +97,14 @@ func (r *MemcachedReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	maxsurge := memcached.Spec.MaxSurge
 	maxunavailable := memcached.Spec.MaxUnavailable
 	image := memcached.Spec.Image
+	progressDeadlineSeconds := memcached.Spec.ProgressDeadlineSeconds
 
-	if *found.Spec.Replicas != size || *found.Spec.Strategy.RollingUpdate.MaxSurge != maxsurge || *found.Spec.Strategy.RollingUpdate.MaxUnavailable != maxunavailable || found.Spec.Template.Spec.Containers[0].Image != image {
+	if *found.Spec.Replicas != size || *found.Spec.Strategy.RollingUpdate.MaxSurge != maxsurge || *found.Spec.Strategy.RollingUpdate.MaxUnavailable != maxunavailable || found.Spec.Template.Spec.Containers[0].Image != image || found.Spec.ProgressDeadlineSeconds != progressDeadlineSeconds {
 		found.Spec.Replicas = &size
 		found.Spec.Strategy.RollingUpdate.MaxSurge = &maxsurge
 		found.Spec.Strategy.RollingUpdate.MaxUnavailable = &maxunavailable
+		found.Spec.ProgressDeadlineSeconds = progressDeadlineSeconds
+
 		found.Spec.Template.Spec.Containers = []corev1.Container{{
 			Image:   image,
 			Name:    "memcached",
