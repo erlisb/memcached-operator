@@ -53,6 +53,10 @@ type MemcachedStatus struct {
 	Nodes []string `json:"nodes,omitempty"`
 }
 
+//+kubebuilder:printcolumn:name="Size",type=integer,JSONPath=`.spec.size`
+//+kubebuilder:printcolumn:name="MaxSurge",type=integer,JSONPath=`.spec.maxsurge`
+//+kubebuilder:printcolumn:name="MaxUnavailable",type=integer,JSONPath=`.spec.maxunavailable`
+//+kubebuilder:printcolumn:name="Image",type=string,JSONPath=`.spec.image`
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 // +operator-sdk:csv:customresourcedefinitions:resources={{Deployment,v1,memcached-deployment}}
